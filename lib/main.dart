@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './widgets/chart.dart';
@@ -160,37 +159,44 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
   }
 
+  Widget _buildCupertinoNavigationBar() {
+    return CupertinoNavigationBar(
+      middle: Text(
+        'Personal Expenses',
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          CupertinoButton(
+            child: Icon(CupertinoIcons.add),
+            onPressed: () => _startAddNewTransaction(context),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return AppBar(
+      title: Text(
+        'Personal Expenses',
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => _startAddNewTransaction(context),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
 
-    final PreferredSizeWidget appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: Text(
-              'Personal Expenses',
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                CupertinoButton(
-                  child: Icon(CupertinoIcons.add),
-                  onPressed: () => _startAddNewTransaction(context),
-                )
-              ],
-            ),
-          )
-        : AppBar(
-            title: Text(
-              'Personal Expenses',
-            ),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () => _startAddNewTransaction(context),
-              ),
-            ],
-          );
+    final PreferredSizeWidget appBar =
+        Platform.isIOS ? _buildCupertinoNavigationBar() : _buildAppBar();
 
     final txListWidget = Container(
       height: (mediaQuery.size.height -
